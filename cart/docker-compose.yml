@@ -1,0 +1,33 @@
+version: "3"
+services:
+########################################################
+############### Main Services ##########################
+########################################################
+  cart:
+    build: &cart-build
+      context: .
+    volumes: &cart-volumes
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on: &cart-depends-on
+      - cart-redis
+
+  cart-redis:
+    image: redis:latest
+
+########################################################
+################ CI Services ###########################
+########################################################
+
+  ci: &ci
+    build: *cart-build
+    # whatever is the spec command
+    # entrypoint:
+    depends_on: *cart-depends-on
+
+  spec:
+    <<: *ci
+    volumes: *cart-volumes
+
+#### If we want to run locally we need to create a default network for all the services. 
