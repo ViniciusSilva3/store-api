@@ -1,6 +1,7 @@
 FROM golang:alpine
 
 ENV APP_HOME /app
+ENV PORT 8000
 
 WORKDIR ${APP_HOME}
 
@@ -11,6 +12,6 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go build -o /cart
+EXPOSE ${PORT}
 
-CMD [ "/cart" ]
+CMD [ "go", "run", "main.go" ]

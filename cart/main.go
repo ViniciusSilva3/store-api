@@ -4,17 +4,25 @@ import (
     // "encoding/json"
     "log"
     "net/http"
+		"context"
     "github.com/gorilla/mux"
+		"github.com/go-redis/redis/v9"
+		// Database
+		"cart/db"
 )
 
-// Redis.sadd('cart-#{userId}', Product)
-
 // Struct for each product in the cart
-type Product struct {
-	ProductID string `json:"productId"`
-	UserID string `json:"userId"`
-	Quantity int8 `json:"quantity"`
-}
+// type Product struct {
+// 	ProductID string `json:"productId"`
+// 	UserID string `json:"userId"`
+// 	Quantity int8 `json:"quantity"`
+// }
+
+var (
+	ListenAddr = "localhost:8080"
+	RedisAddr = "cart-redis:6379"
+)
+
 
 
 func getCart(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +41,11 @@ func deleteCart(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
+		database, err := db.NewDatabase(RedisAddr)
+		if err != nil {
+			log.Fatalf("Failed to connect to redis: %s", err.Error())
+		}
+	
     router := mux.NewRouter()
 
 		router.HandleFunc("/cart/{userId}", getCart).Methods("GET")
@@ -42,3 +55,4 @@ func main() {
 
     log.Fatal(http.ListenAndServe(":8000", router))
 }
+
