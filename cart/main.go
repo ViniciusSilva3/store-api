@@ -60,7 +60,7 @@ func (a *App) AddToCart(w http.ResponseWriter, r *http.Request) {
 	if err := a.DB.AddToCart(&product); err != nil {
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (a *App) DeleteCart(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +69,7 @@ func (a *App) DeleteCart(w http.ResponseWriter, r *http.Request) {
 	if err := a.DB.DeleteCart(userId); err != nil {
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 
 	// delete cart
 }
@@ -82,7 +82,7 @@ func (a *App) DeleteProductFromCart(w http.ResponseWriter, r *http.Request) {
 	if err := a.DB.DeleteProductFromCart(userId, productId); err != nil {
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNoContent)
 
 	// delete cart
 }

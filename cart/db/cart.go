@@ -43,19 +43,17 @@ func (db *Database) AddToCart(product *Product) error {
 }
 
 func (db *Database) DeleteCart(userId string) error { 
-	var key = cartKey + userId + ":*"
-	err := db.Client.HDel(Ctx, key)
+	cartKey := cartKey + strings.TrimSpace(userId)
+	err := db.Client.Del(Ctx, cartKey)
 
 	if err != nil {
-		panic(err)
+		fmt.Print(err)
 	}
 	return nil
 }
 
 func (db *Database) DeleteProductFromCart(userId string, productId string) error { 
 	cartKey := cartKey + strings.TrimSpace(userId)
-	fmt.Print("cartKey: ", cartKey)
-	fmt.Print("productId: ", productId)
 
 	err := db.Client.HDel(Ctx, cartKey, strings.TrimSpace(productId))
 
