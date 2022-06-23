@@ -1,5 +1,6 @@
-@build: 
+build: 
+	docker network create store-api-network || true
 	docker-compose build
 
-@dev: 
+dev: 
 	docker-compose up -d

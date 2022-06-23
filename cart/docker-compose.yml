@@ -12,6 +12,8 @@ services:
       - "8000:8000"
     depends_on: &cart-depends-on
       - cart-redis
+    networks:
+      - store-api-network
 
   cart-redis:
     image: redis:latest
@@ -31,3 +33,7 @@ services:
     volumes: *cart-volumes
 
 #### If we want to run locally we need to create a default network for all the services. 
+networks:
+  store-api-network:
+    external: true
+  default:
