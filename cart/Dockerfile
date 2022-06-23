@@ -15,4 +15,4 @@ COPY *.go ./
 EXPOSE ${PORT}
 
 # TODO: ver se isso tem watch
-CMD [ "go", "run", "main.go" ]
+CMD [ "go", "run", "main.go", "app.go" ]
