@@ -1,20 +1,26 @@
 package main
 
 import (
-    // "encoding/json"
+    "encoding/json"
     "log"
     "net/http"
-		"context"
+		// "context"
     "github.com/gorilla/mux"
-		"github.com/go-redis/redis/v9"
+		// "github.com/go-redis/redis/v9"
 		// Database
 		"cart/db"
+		"fmt"
 )
+
+type App struct {
+	Router *mux.Router
+	DB     *db.Database
+}
 
 // Struct for each product in the cart
 // type Product struct {
-// 	ProductID string `json:"productId"`
-// 	UserID string `json:"userId"`
+// 	ProductId string `json:"productId"`
+// 	UserId string `json:"userId"`
 // 	Quantity int8 `json:"quantity"`
 // }
 
@@ -25,34 +31,61 @@ var (
 
 
 
-func getCart(w http.ResponseWriter, r *http.Request) {
+func (a *App) GetCart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// get the hset from Redis
 }
 
-func addToCart(w http.ResponseWriter, r *http.Request) {
+func (a *App) AddToCart(w http.ResponseWriter, r *http.Request) {
 	// add items to cart
+	params := mux.Vars(r)
+	var product db.Product
+	decoder := json.NewDecoder(r.Body)
+
+	if err := decoder.Decode(&product); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Print("Error decoding JSON: ", err)
+		return
+	}
+	defer r.Body.Close()
+	product.UserId = params["userId"]
+	if err := a.DB.AddToCart(&product); err != nil {
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
-func deleteCart(w http.ResponseWriter, r *http.Request) {
+func (a *App) DeleteCart(w http.ResponseWriter, r *http.Request) {
 	// delete cart
 }
 
+func (a *App) Initialize(RedisAddr string) {
+	var err error
+	a.DB, err = db.NewDatabase(RedisAddr)
+	if err != nil {
+		log.Fatalf("Failed to connect to redis: %s", err.Error())
+	}
+
+	a.Router = mux.NewRouter()
+	a.initializeRoutes()
+}
+
+func (a *App) initializeRoutes() {
+	a.Router.HandleFunc("/cart/{userId}", a.GetCart).Methods("GET")
+	a.Router.HandleFunc("/cart/{userId}", a.AddToCart).Methods("POST")
+	a.Router.HandleFunc("/cart/{userId}", a.DeleteCart).Methods("DELETE")
+}
+
+func (a *App) Run(addr string) {
+	log.Fatal(http.ListenAndServe(":8000", a.Router))
+}
 
 
 func main() {
-		database, err := db.NewDatabase(RedisAddr)
-		if err != nil {
-			log.Fatalf("Failed to connect to redis: %s", err.Error())
-		}
-	
-    router := mux.NewRouter()
-
-		router.HandleFunc("/cart/{userId}", getCart).Methods("GET")
-		router.HandleFunc("/cart/{userId}", addToCart).Methods("POST")
-		router.HandleFunc("/cart/{userId}", deleteCart).Methods("DELETE")
-
-
-    log.Fatal(http.ListenAndServe(":8000", router))
+		a := App{}
+		fmt.Print("Starting db...")
+		a.Initialize(RedisAddr)
+		fmt.Print("Starting server...")
+		a.Run(ListenAddr)
 }
 

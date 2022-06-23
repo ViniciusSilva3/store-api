@@ -1,8 +1,11 @@
 package db
 
-cartKey = "cart:" 
-// cart:userId:productId <quantity> 
-// GET cart:userId:* 
+import (
+	"fmt"
+	"strings"
+)
+
+var cartKey = "cart:" 
 
 type Product struct {
 	ProductId string `json:"productId"`
@@ -10,23 +13,39 @@ type Product struct {
 	Quantity int8 `json:"quantity"`
 }
 
-func (db *Database) GetCart(userId string) (*Product[], error) {
-	key = cartKey + userId + ":*"
-	return db.Client.Get(Ctx, key)
+func (db *Database) GetCart(userId string) ([]Product, error) {
+
+	return []Product{}, nil
 }
 
 func (db *Database) AddToCart(product *Product) error {
-	key = cartKey + product.UserId + ":" + product.ProductId
-	db.Client.Set(Ctx, key, product.Quantity)
+	fmt.Print("product: ", product.UserId)
+	cartKey := cartKey + strings.TrimSpace(product.UserId)
+	fmt.Print("key: ", cartKey)
+
+	err := db.Client.HSet(Ctx, cartKey, strings.TrimSpace(product.ProductId), product.Quantity)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return nil
 }
 
 func (db *Database) RemoveItemFromCart(product *Product) error {
-	key = cartKey + product.UserId + ":" + product.ProductId
-	db.client.Del(Ctx, key)
+	var key = cartKey + product.UserId + ":" + product.ProductId
+	err := db.Client.Del(Ctx, key)
+	if err != nil {
+		panic(err)
+	}
+	return nil
 }
 
 func (db *Database) DeleteCart(userId string) error { 
-	key = cartKey + userId + ":*"
-	db.client.Del(Ctx, key)
+	var key = cartKey + userId + ":*"
+	err := db.Client.Del(Ctx, key)
+
+	if err != nil {
+		panic(err)
+	}
+	return nil
 }
 

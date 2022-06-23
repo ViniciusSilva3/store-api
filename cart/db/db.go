@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 	"errors"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v9"
 )
 
 type Database struct {
