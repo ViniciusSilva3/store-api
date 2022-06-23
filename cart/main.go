@@ -17,23 +17,29 @@ type App struct {
 	DB     *db.Database
 }
 
-// Struct for each product in the cart
-// type Product struct {
-// 	ProductId string `json:"productId"`
-// 	UserId string `json:"userId"`
-// 	Quantity int8 `json:"quantity"`
-// }
-
 var (
 	ListenAddr = "localhost:8080"
 	RedisAddr = "cart-redis:6379"
 )
 
-
-
 func (a *App) GetCart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// get the hset from Redis
+	params := mux.Vars(r)
+	userId := params["userId"]
+	cart, err := a.DB.GetCart(userId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Print((json.NewEncoder(w).Encode(cart)))
+
+	// return the cart
+	w.WriteHeader(http.StatusOK)
+	
+	// json.NewEncoder(w).Encode(cart)
+	
 }
 
 func (a *App) AddToCart(w http.ResponseWriter, r *http.Request) {

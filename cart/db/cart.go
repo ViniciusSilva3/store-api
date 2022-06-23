@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"strings"
+	"strconv"
 )
 
 var cartKey = "cart:" 
@@ -10,18 +11,29 @@ var cartKey = "cart:"
 type Product struct {
 	ProductId string `json:"productId"`
 	UserId string `json:"userId"`
-	Quantity int8 `json:"quantity"`
+	Quantity int `json:"quantity"`
 }
 
 func (db *Database) GetCart(userId string) ([]Product, error) {
-
-	return []Product{}, nil
+	cartKey := cartKey + strings.TrimSpace(userId)
+	val, err := db.Client.HGetAll(Ctx, cartKey).Result()
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	var products []Product
+	for k, v := range val {
+		product := Product{}
+		product.ProductId = k
+		product.UserId = strings.TrimSpace(userId)
+		product.Quantity, _ = strconv.Atoi(v)
+		products = append(products, product)
+	}
+	return products, nil
 }
 
 func (db *Database) AddToCart(product *Product) error {
-	fmt.Print("product: ", product.UserId)
 	cartKey := cartKey + strings.TrimSpace(product.UserId)
-	fmt.Print("key: ", cartKey)
 
 	err := db.Client.HSet(Ctx, cartKey, strings.TrimSpace(product.ProductId), product.Quantity)
 	if err != nil {
