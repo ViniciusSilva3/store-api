@@ -2,13 +2,18 @@
 
 package main
 
-var (
-	ListenAddr = "localhost:8080"
-	RedisAddr = "cart-redis:6379"
+import (
+	"github.com/joho/godotenv"
+	"os"
 )
 
 func main() {
-		a := App{}
-		a.Initialize(RedisAddr, ListenAddr)
-		a.Run(ListenAddr)
+	godotenv.Load()
+
+	a := App{}
+	a.Initialize(
+		os.Getenv("REDIS_ADDR"),
+		os.Getenv("LISTEN_ADDR"),
+	)
+	a.Run(os.Getenv("LISTEN_ADDR"))
 }
