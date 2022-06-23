@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUserDatabaseManager, UserDatabaseManager>();
 builder.Services.AddSingleton<IPersister, Persister>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IShippingService, ShippingService>();
 
 var app = builder.Build();
 
