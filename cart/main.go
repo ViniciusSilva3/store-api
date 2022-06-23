@@ -30,10 +30,12 @@ func (a *App) GetCart(w http.ResponseWriter, r *http.Request) {
 	cart, err := a.DB.GetCart(userId)
 	if err != nil {
 		log.Println(err)
+
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Print((json.NewEncoder(w).Encode(cart)))
+	json.NewEncoder(w).Encode(cart)
 
 	// return the cart
 	w.WriteHeader(http.StatusOK)
@@ -62,6 +64,26 @@ func (a *App) AddToCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) DeleteCart(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userId := params["userId"]
+	if err := a.DB.DeleteCart(userId); err != nil {
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+
+	// delete cart
+}
+
+func (a *App) DeleteProductFromCart(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userId := params["userId"]
+	productId := params["productId"]
+
+	if err := a.DB.DeleteProductFromCart(userId, productId); err != nil {
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+
 	// delete cart
 }
 
@@ -80,6 +102,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/cart/{userId}", a.GetCart).Methods("GET")
 	a.Router.HandleFunc("/cart/{userId}", a.AddToCart).Methods("POST")
 	a.Router.HandleFunc("/cart/{userId}", a.DeleteCart).Methods("DELETE")
+	a.Router.HandleFunc("/cart/{userId}/{productId}", a.DeleteProductFromCart).Methods("DELETE")
 }
 
 func (a *App) Run(addr string) {

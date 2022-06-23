@@ -42,21 +42,25 @@ func (db *Database) AddToCart(product *Product) error {
 	return nil
 }
 
-func (db *Database) RemoveItemFromCart(product *Product) error {
-	var key = cartKey + product.UserId + ":" + product.ProductId
-	err := db.Client.Del(Ctx, key)
+func (db *Database) DeleteCart(userId string) error { 
+	var key = cartKey + userId + ":*"
+	err := db.Client.HDel(Ctx, key)
+
 	if err != nil {
 		panic(err)
 	}
 	return nil
 }
 
-func (db *Database) DeleteCart(userId string) error { 
-	var key = cartKey + userId + ":*"
-	err := db.Client.Del(Ctx, key)
+func (db *Database) DeleteProductFromCart(userId string, productId string) error { 
+	cartKey := cartKey + strings.TrimSpace(userId)
+	fmt.Print("cartKey: ", cartKey)
+	fmt.Print("productId: ", productId)
+
+	err := db.Client.HDel(Ctx, cartKey, strings.TrimSpace(productId))
 
 	if err != nil {
-		panic(err)
+		fmt.Print(err)
 	}
 	return nil
 }
