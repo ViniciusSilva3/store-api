@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Catalog.Domain.Utils;
 public abstract class ValueObject
 {
     protected abstract IEnumerable<object> GetEqualityComponents();

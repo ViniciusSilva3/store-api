@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Catalog.Domain.Utils;
 // works with reference types only
 public struct Maybe<T>: IEquatable<Maybe<T>>
     where T : class

@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Catalog.Domain.Utils;
 public class Result
 {
     public bool IsSuccess {get; }
