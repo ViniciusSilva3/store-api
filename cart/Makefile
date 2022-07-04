@@ -3,4 +3,4 @@ build:
 	docker-compose build
 
 dev: 
-	docker-compose up -d
+	docker-compose up -d cart

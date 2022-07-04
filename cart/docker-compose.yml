@@ -12,11 +12,12 @@ services:
       - "8000:8000"
     depends_on: &cart-depends-on
       - cart-redis
-    networks:
+    networks: &cart-networks
       - store-api-network
 
   cart-redis:
     image: redis:latest
+    networks: *cart-networks
 
 ########################################################
 ################ CI Services ###########################
@@ -24,9 +25,11 @@ services:
 
   ci: &ci
     build: *cart-build
+    command: "go test -v -vet=off ./..."
     # whatever is the spec command
     # entrypoint:
     depends_on: *cart-depends-on
+
 
   spec:
     <<: *ci

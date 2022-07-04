@@ -14,6 +14,16 @@ type Product struct {
 	Quantity int `json:"quantity"`
 }
 
+func (db *Database) AddToCart(product *Product) error {
+	cartKey := cartKey + strings.TrimSpace(product.UserId)
+
+	err := db.Client.HSet(Ctx, cartKey, strings.TrimSpace(product.ProductId), product.Quantity)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return nil
+}
+
 func (db *Database) GetCart(userId string) ([]Product, error) {
 	cartKey := cartKey + strings.TrimSpace(userId)
 	val, err := db.Client.HGetAll(Ctx, cartKey).Result()
@@ -30,16 +40,6 @@ func (db *Database) GetCart(userId string) ([]Product, error) {
 		products = append(products, product)
 	}
 	return products, nil
-}
-
-func (db *Database) AddToCart(product *Product) error {
-	cartKey := cartKey + strings.TrimSpace(product.UserId)
-
-	err := db.Client.HSet(Ctx, cartKey, strings.TrimSpace(product.ProductId), product.Quantity)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return nil
 }
 
 func (db *Database) DeleteCart(userId string) error { 
