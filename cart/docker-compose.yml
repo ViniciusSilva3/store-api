@@ -25,15 +25,13 @@ services:
 
   ci: &ci
     build: *cart-build
-    command: "go test -v -vet=off ./..."
-    # whatever is the spec command
-    # entrypoint:
+    volumes: *cart-volumes
     depends_on: *cart-depends-on
-
+    networks: *cart-networks
+    command: ["go", "test", "-v", "-vet=off", "./..."]
 
   spec:
     <<: *ci
-    volumes: *cart-volumes
 
 #### If we want to run locally we need to create a default network for all the services. 
 networks:

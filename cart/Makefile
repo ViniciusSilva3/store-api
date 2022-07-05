@@ -4,3 +4,6 @@ build:
 
 dev: 
 	docker-compose up -d cart
+
+ci:
+	docker-compose run --rm ci
