@@ -10,6 +10,7 @@ The database used is a Redis.
 ## Running tests 
 
 `make build`
+
 `make ci`
 
 ## Endpoint documentation 
