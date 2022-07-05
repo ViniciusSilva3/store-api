@@ -1,39 +1,24 @@
 using Catalog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Catalog.Domain.Utils;
+using Catalog.Infrastructure.Data.Entities;
 
 namespace Infrastructure.Data.Repositories
 {
     public interface IProductRepository
     {
-        Task<Product> GetById(string Id);
-        Task<Result> SaveProduct(Product product);
+        
     }   
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : Repository<CatalogContext>, IProductRepository
     {
-        private readonly ProductContext _db;
-        public ProductRepository(ProductContext db)
+        public ProductRepository(CatalogContext context)
+        :base(context)
         {
-            _db = db;
         }
 
-        public async Task<Product> GetById(string Id)
+        public CatalogContext CatalogContext
         {
-            return await _db.Product.SingleAsync(product => product.Id == Id);
-        }
-
-        public async Task<Result> SaveProduct(Product product)
-        {
-            try
-            {
-                _db.Product.Add(product);
-                await _db.SaveChangesAsync();
-                return Result.Ok();
-            }
-            catch(Exception)
-            {
-                return Result.Fail("Could not save product");
-            }         
+            get { return _context as CatalogContext; }
         }
     }
 }
