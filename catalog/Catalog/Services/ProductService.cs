@@ -2,6 +2,7 @@ using Catalog.Domain;
 using Catalog.Infrastructure.Data;
 using Catalog.Domain.Utils;
 using Infrastructure.Data.Repositories;
+using Catalog.Infrastructure.Data.UnitOfWork;
 
 namespace Catalog.Services;
 
@@ -13,11 +14,11 @@ public interface IProductService
 
 public class ProductService : IProductService
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IUnitOfWork unitOfWork)
     {
-        _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
     }
     
     public void GetProduct()
@@ -35,9 +36,16 @@ public class ProductService : IProductService
             Id = id,
             CreationDate = creationDate,
             Name = product.Name,
-            Weight = product.Weight
+            Weight = product.Weight,
+            Price = product.Price
         };
-        
-        return await _productRepository.SaveProduct(newProduct);    
+
+        Result res = await _unitOfWork.Product.Add(newProduct);
+        if (res.IsSuccess)
+        {
+            _unitOfWork.Complete();
+        }
+
+        return res;
     }
 }

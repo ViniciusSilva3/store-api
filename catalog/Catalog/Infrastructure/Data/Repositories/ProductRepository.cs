@@ -5,11 +5,11 @@ using Catalog.Infrastructure.Data.Entities;
 
 namespace Infrastructure.Data.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product>
     {
         
     }   
-    public class ProductRepository : Repository<CatalogContext>, IProductRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
         public ProductRepository(CatalogContext context)
         :base(context)

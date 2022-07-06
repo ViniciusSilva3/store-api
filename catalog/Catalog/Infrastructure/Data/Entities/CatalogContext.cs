@@ -6,6 +6,6 @@ namespace Catalog.Infrastructure.Data.Entities
     public class CatalogContext : DbContext
     {
         public CatalogContext(DbContextOptions options) : base(options) { }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Product { get; set; }
     }
 }

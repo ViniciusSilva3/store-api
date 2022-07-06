@@ -6,18 +6,18 @@ namespace Catalog.Infrastructure.Data.UnitOfWork;
 
 public interface IUnitOfWork : IDisposable
 {
-    IProductRepository Products { get; }
+    IProductRepository Product { get; }
     int Complete();
 }
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly CatalogContext _context;
-    public IProductRepository Products { get; private set;}
-    public UnitOfWork(CatalogContext context)
+    public IProductRepository Product { get; private set;}
+    public UnitOfWork(CatalogContext context, IProductRepository product)
     {
         _context = context;
-        Products = new ProductRepository(_context);
+        Product = product;
     }
 
     public int Complete()
