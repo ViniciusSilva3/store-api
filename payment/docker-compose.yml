@@ -1,0 +1,51 @@
+version: "3"
+services:
+  payment-db:
+    image: postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: payment
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - store-api-network
+
+  payment-service:
+    build: &payment_build
+      context: .
+    volumes: &payment_volumes
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - payment-db
+    networks:
+      - store-api-network
+
+############### Deploy ###############
+  deploy: 
+    build: *payment_build
+    image: "${CURRENT_BUILD_IMAGE_NAME:-payment-service}"
+
+
+############### CI ###################
+
+  payment-ci: &ci 
+    build: *payment_build
+    command: yarn test
+    env_file:
+      - .env.test
+    depends_on:
+      - payment-db
+
+  spec: 
+    <<: *ci
+    volumes: *payment_volumes
+
+#### If we want to run locally we need to create a default network for all the services. 
+networks:
+  store-api-network:
+    external: true
+  default:

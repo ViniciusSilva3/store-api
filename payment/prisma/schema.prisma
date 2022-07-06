@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id          String @id @default(cuid())
+  amount      Int
+  user_id     String 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model CreditCard {
+  id          String @id @default(cuid())
+  number      String
+  expiry      String
+  user_id     String
+  document    String
+  name        String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Order {
+  id               String @id @default(cuid())
+  user_id          String
+  payment_id       String
+  credit_card_id   String
+  status           String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+}
+
+
