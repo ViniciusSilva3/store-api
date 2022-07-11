@@ -49,3 +49,7 @@ networks:
   store-api-network:
     external: true
   default:
+
+volumes:
+  postgresdata:
+    driver: local
