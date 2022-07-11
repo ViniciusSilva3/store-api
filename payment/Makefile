@@ -4,7 +4,7 @@ build:
 
 dev:
 	@make build
-	docker-compose up -d payment-service
+	docker-compose up payment-service
 
 ci:
 	docker-compose run --rm ci
