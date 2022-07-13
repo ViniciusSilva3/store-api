@@ -6,6 +6,14 @@ import { CreditCard, Prisma } from '@prisma/client';
 export class CreditCardService {
   constructor(private prisma: PrismaService) {}
 
+  async creditCard(
+    creditCardWhereUniqueInput: Prisma.CreditCardWhereUniqueInput,
+  ): Promise<CreditCard | null> {
+    return this.prisma.creditCard.findUnique({
+      where: creditCardWhereUniqueInput,
+    });
+  }
+
   async getUserCreditCards(user_id: string): Promise<CreditCard[]> {
     return this.creditCards({
       where: {
@@ -42,14 +50,6 @@ export class CreditCardService {
   }
 
   // Helper methods
-  async creditCard(
-    creditCardWhereUniqueInput: Prisma.CreditCardWhereUniqueInput,
-  ): Promise<CreditCard | null> {
-    return this.prisma.creditCard.findUnique({
-      where: creditCardWhereUniqueInput,
-    });
-  }
-
   async creditCards(params: {
     skip?: number;
     take?: number;
