@@ -1,9 +1,13 @@
-build: 
+network:
 	docker network create store-api-network || true
+
+build: 
+	@make network
 	docker-compose build
 
 dev:
-	@make build
+	@make network
+	@make database
 	docker-compose up payment-service
 
 ci:

@@ -10,4 +10,4 @@ COPY . ${APP_HOME}
 
 RUN yarn
 
-CMD ["yarn", "start"]
+CMD ["yarn", "start:dev"]

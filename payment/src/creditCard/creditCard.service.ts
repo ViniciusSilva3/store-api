@@ -6,28 +6,11 @@ import { CreditCard, Prisma } from '@prisma/client';
 export class CreditCardService {
   constructor(private prisma: PrismaService) {}
 
-  async creditCard(
-    creditCardWhereUniqueInput: Prisma.CreditCardWhereUniqueInput,
-  ): Promise<CreditCard | null> {
-    return this.prisma.creditCard.findUnique({
-      where: creditCardWhereUniqueInput,
-    });
-  }
-
-  async creditCards(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.CreditCardWhereUniqueInput;
-    where?: Prisma.CreditCardWhereInput;
-    orderBy?: Prisma.CreditCardOrderByWithRelationInput;
-  }): Promise<CreditCard[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.creditCard.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+  async getUserCreditCards(user_id: string): Promise<CreditCard[]> {
+    return this.creditCards({
+      where: {
+        user_id,
+      },
     });
   }
 
@@ -55,6 +38,32 @@ export class CreditCardService {
   ): Promise<CreditCard> {
     return this.prisma.creditCard.delete({
       where,
+    });
+  }
+
+  // Helper methods
+  async creditCard(
+    creditCardWhereUniqueInput: Prisma.CreditCardWhereUniqueInput,
+  ): Promise<CreditCard | null> {
+    return this.prisma.creditCard.findUnique({
+      where: creditCardWhereUniqueInput,
+    });
+  }
+
+  async creditCards(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CreditCardWhereUniqueInput;
+    where?: Prisma.CreditCardWhereInput;
+    orderBy?: Prisma.CreditCardOrderByWithRelationInput;
+  }): Promise<CreditCard[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.creditCard.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
     });
   }
 }
