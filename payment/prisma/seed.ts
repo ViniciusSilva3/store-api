@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const creditCard: Prisma.CreditCardCreateInput[] = [
   {
     number: '4111111111111111',
-    expiry: '2022-04',
+    expiry: '22/04',
     document: '03332314068',
     name: 'Card holder name',
     user_id: '8f184cc1-7da8-4556-8e5f-fbf68727aa3d',
