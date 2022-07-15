@@ -21,3 +21,16 @@ model CreditCard {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 }
+
+model Payment {
+  id              String @id @default(cuid())
+  amount          Float
+  user_id         String
+  order_id        String
+  status          String
+  credit_card_id  String
+  installments    Int  @default(1)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+}
