@@ -8,8 +8,10 @@ namespace Catalog.Services;
 
 public interface IProductService
 {
-    void GetProduct();
+    Task<Result<Product>> GetProductById(string id);
     Task<Result> SaveProduct(ProductModel product);
+    Result<IEnumerable<Product>> GetProducts();
+    Task<Result> UpdateProduct(string id, double? price, double? weight);
 }
 
 public class ProductService : IProductService
@@ -21,9 +23,14 @@ public class ProductService : IProductService
         _unitOfWork = unitOfWork;
     }
     
-    public void GetProduct()
+    public async Task<Result<Product>> GetProductById(string id)
     {
-        throw new NotImplementedException();
+        return await _unitOfWork.Product.Get(id);
+    }
+
+    public Result<IEnumerable<Product>> GetProducts()
+    {
+        return _unitOfWork.Product.GetAll();
     }
 
     public async Task<Result> SaveProduct(ProductModel product)
@@ -46,6 +53,28 @@ public class ProductService : IProductService
             _unitOfWork.Complete();
         }
 
+        return res;
+    }
+
+    public async Task<Result> UpdateProduct(string id, double? price = null, double? weight = null)
+    {
+        Result<Product> product = await _unitOfWork.Product.Get(id);
+
+        if (product.IsNotSuccess)
+        {
+            return Result.Fail("404");
+        }
+
+        if (price != null)
+            product.Value.Price = price.Value;
+        if (weight != null)
+            product.Value.Weight = weight.Value;
+        
+        Result res = await _unitOfWork.Product.Add(product.Value);
+        if (res.IsSuccess)
+        {
+            _unitOfWork.Complete();
+        }
         return res;
     }
 }
