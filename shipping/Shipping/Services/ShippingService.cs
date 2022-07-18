@@ -1,30 +1,37 @@
 using Shipping.Domain.Shipping;
 using Shipping.API.Entities;
 using Shipping.Models;
+using Shipping.Clients;
+using Shipping.Domain;
 
 namespace Shipping.Services;
 
 public interface IShippingService
 {
-    Result<ShippingQuote> CalculateShippingQuote(List<Product> productList);
+    Task<Result<ShippingQuote>> CalculateShippingQuote(List<CartProduct> productList);
 }
 
 public class ShippingService : IShippingService
 {
     
-    public Random _rand;
+    private readonly CatalogClient _catalogClient;
 
-    public ShippingService()
+    public ShippingService(CatalogClient catalogClient)
     {
-        _rand = new Random();
+        _catalogClient = catalogClient;
     }
 
-    public Result<ShippingQuote> CalculateShippingQuote(List<Product> productList)
+    public async Task<Result<ShippingQuote>> CalculateShippingQuote(List<CartProduct> productList)
     {
-        float totalCost = 0;
-        foreach(Product product in productList)
+        double totalCost = 0;
+        foreach(CartProduct item in productList)
         {
-            totalCost += (float)(product.Quantity * _rand.NextDouble());
+            Result<Product> product = await _catalogClient.GetProductById(item.ProductId);
+            if (product.IsNotSuccess)
+            {
+                return Result.Fail<ShippingQuote>(product.Error);
+            }
+            totalCost += (double)(item.Quantity * product.Value.Weight);
         }
         Result<Currency> currencyCode = Currency.Create("Real");
         Result<Price> price = Price.Create(totalCost);

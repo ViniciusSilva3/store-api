@@ -22,10 +22,10 @@ public class ShippingController : ControllerBase
     */
         [HttpPost]
         [Route("quote")]
-        public ActionResult<ShippingQuote> CalculateShippingQuote(CartModal cart)
+        public async Task<ActionResult<ShippingQuote>> CalculateShippingQuote(CartModal cart)
         {
-            List<Product> validProductList = new List<Product>();
-            foreach (Product product in cart.ProductList)
+            List<CartProduct> validProductList = new List<CartProduct>();
+            foreach (CartProduct product in cart.ProductList)
             {
                 Result<ProductId> productId = ProductId.Create(product.ProductId);
                 Result<ProductQuantity> productQuantity = ProductQuantity.Create(product.Quantity);
@@ -36,10 +36,10 @@ public class ShippingController : ControllerBase
                 {
                     return new BadRequestObjectResult(result.Error);
                 }
-                validProductList.Add(new Product() { ProductId = productId.Value, Quantity = productQuantity.Value});
+                validProductList.Add(new CartProduct() { ProductId = productId.Value, Quantity = productQuantity.Value});
             }
 
-            Result<ShippingQuote> quote = _shippingService.CalculateShippingQuote(validProductList);
+            Result<ShippingQuote> quote = await _shippingService.CalculateShippingQuote(validProductList);
 
             if (quote.IsNotSuccess)
             {

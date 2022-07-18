@@ -7,12 +7,12 @@ public class ShippingQuote
 
     public ShippingQuoteModal ToShippingQuoteModal()
     {
-        return new ShippingQuoteModal() { Value = (float)Value, CurrencyCode = (string) CurrencyCode };
+        return new ShippingQuoteModal() { Value = (double)Value, CurrencyCode = (string) CurrencyCode };
     }
 }
 
 public class ShippingQuoteModal
 {
-    public float Value { get; set; }
+    public double Value { get; set; }
     public string CurrencyCode { get; set; }
 }
