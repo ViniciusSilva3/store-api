@@ -12,6 +12,7 @@ export class PaymentController {
     paymentData: {
       amount: number;
       user_id: string;
+      installments: number;
       status: string;
       order_id: string;
       credit_card_id: string;

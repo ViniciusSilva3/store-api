@@ -5,7 +5,7 @@ import { CreditCardService } from './creditCard.service';
 
 describe('CreditCardController', () => {
   let creditCardController: CreditCardController;
-  let creditCardService: CreditCardService;
+  // let creditCardService: CreditCardService;
 
   const creditCard: Prisma.CreditCardCreateInput = {
     number: '4111111111111111',
@@ -15,12 +15,8 @@ describe('CreditCardController', () => {
     user_id: '123456789',
   };
 
-  const creditCardUpdate: Prisma.CreditCardCreateInput = {
-    number: '4111111111111111',
-    expiry: '12/20',
-    document: '123456789',
+  const creditCardUpdate = {
     name: 'John Doe Updated',
-    user_id: '123456789',
   };
 
   beforeEach(async () => {
@@ -40,7 +36,7 @@ describe('CreditCardController', () => {
       ],
     }).compile();
 
-    creditCardService = app.get<CreditCardService>(CreditCardService);
+    // creditCardService = app.get<CreditCardService>(CreditCardService);
     creditCardController = app.get<CreditCardController>(CreditCardController);
   });
 

@@ -7,7 +7,7 @@ export class PaymentStatusController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Patch('/:id')
-  async createPayment(
+  async updatePaymentStatus(
     @Param('id') id: string,
     @Body()
     paymentData: {
