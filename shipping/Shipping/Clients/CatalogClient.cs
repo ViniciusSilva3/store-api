@@ -21,7 +21,7 @@ public class CatalogClient : ICatalogClient
 
     public async Task<Result<Product>> GetProductById(string id)
     {
-        string path = $"catalog/{id}";
+        string path = $"catalog/product/{id}";
         Product product = null;
         HttpResponseMessage response = await _httpClient.GetAsync(path);
         if (response.IsSuccessStatusCode)

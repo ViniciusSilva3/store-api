@@ -8,7 +8,7 @@ public class ProductId : ValueObject
     {
         return productIdCode.ToResult("ProductId code cannot be an empty string.")
             .OnSuccess(productIdCode => productIdCode.Trim())
-            .Ensure(productIdCode => productIdCode.Length <= 33, "productId code must have at most 5 letters.")
+            .Ensure(productIdCode => productIdCode.Length <= 36, "productId code must have at most 36 letters.")
             .Map(productIdCode => new ProductId(productIdCode));
     }
 
