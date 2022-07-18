@@ -1,4 +1,4 @@
-namespace Store.Domain.Shipping;
+namespace Shipping.Domain.Shipping;
 
 public class ShippingQuote
 {

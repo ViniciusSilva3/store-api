@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Shipping.Models;
 
 public static class ResultExtensions
 {

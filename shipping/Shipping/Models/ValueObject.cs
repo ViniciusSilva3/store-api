@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Shipping.Models;
 public abstract class ValueObject
 {
     protected abstract IEnumerable<object> GetEqualityComponents();

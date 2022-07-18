@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using Store.Models;
-using Store.Services;
-using Store.API.Entities;
-using Store.Domain.Shipping;
+using Shipping.Models;
+using Shipping.Services;
+using Shipping.API.Entities;
+using Shipping.Domain.Shipping;
 
 
-namespace Store.Controllers;
+namespace Shipping.Controllers;
 
 [ApiController]
-[Route("api/shipping")]
+[Route("shipping")]
 public class ShippingController : ControllerBase
 {
     private readonly IShippingService _shippingService;

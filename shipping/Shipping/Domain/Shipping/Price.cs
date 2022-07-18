@@ -1,5 +1,5 @@
-using Store.Models;
-namespace Store.Domain.Shipping;
+using Shipping.Models;
+namespace Shipping.Domain.Shipping;
 public class Price : ValueObject
 {
     private readonly float _value;

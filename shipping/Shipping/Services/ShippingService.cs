@@ -1,8 +1,8 @@
-using Store.Domain.Shipping;
-using Store.API.Entities;
-using Store.Models;
+using Shipping.Domain.Shipping;
+using Shipping.API.Entities;
+using Shipping.Models;
 
-namespace Store.Services;
+namespace Shipping.Services;
 
 public interface IShippingService
 {

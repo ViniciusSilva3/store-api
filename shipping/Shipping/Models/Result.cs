@@ -1,4 +1,4 @@
-namespace Store.Models;
+namespace Shipping.Models;
 public class Result
 {
     public bool IsSuccess {get; }

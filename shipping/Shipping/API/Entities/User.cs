@@ -1,4 +1,4 @@
-namespace Store.API.Entities;
+namespace Shipping.API.Entities;
 
 public class UserModal
 {
