@@ -24,7 +24,7 @@ defaults:
 
 env:
   BUILD_TARGETS: payment-service
-  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service
+  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service:${{ github.ref_name }}
 
 
 jobs:
@@ -59,13 +59,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Tag Docker
-        run: | 
-          docker tag $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }} $CURRENT_BUILD_IMAGE_NAME:${{ github.run_attempt }}
-
+      # - name: Tag Docker
+      #   run: | 
+      #     docker tag $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }}
       
       - name: Push image to DockerHub
-        run: docker push $CURRENT_BUILD_IMAGE_NAME
+        run: docker push --all-tags  $CURRENT_BUILD_IMAGE_NAME
 
 
 
