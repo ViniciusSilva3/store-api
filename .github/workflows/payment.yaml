@@ -61,7 +61,7 @@ jobs:
       
       - name: Tag Docker
         run: | 
-          docker tag $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }} $CURRENT_BUILD_IMAGE_NAME::${{ github.run_attempt }}
+          docker tag $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }} $CURRENT_BUILD_IMAGE_NAME:${{ github.run_attempt }}
 
       
       - name: Push image to DockerHub
