@@ -28,19 +28,19 @@ env:
 
 
 jobs:
-  # ci: 
-  #   name: Payment CI 
-  #   runs-on: ubuntu-latest
+  ci: 
+    name: Payment CI 
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Build
-  #       run: make build
+      # - name: Build
+      #   run: make build
 
-  #     - name: Test
-  #       run: make ci
+      # - name: Test
+      #   run: make ci
 
   build_deploy_image:
     needs: [ci]
