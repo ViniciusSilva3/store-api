@@ -10,6 +10,11 @@ on:
     branches:
       - 'payment-**'
       - 'payment/**'
+  workflow_dispatch:
+    logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
 
 defaults:
   run:
@@ -37,7 +42,7 @@ jobs:
 
   build_deploy_image:
     needs: [ci]
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
