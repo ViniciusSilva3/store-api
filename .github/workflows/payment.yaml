@@ -36,11 +36,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Build
-      #   run: make build
+      - name: Build
+        run: make build
 
-      # - name: Test
-      #   run: make ci
+      - name: Test
+        run: make ci
 
   build_deploy_image:
     needs: [ci]
@@ -58,14 +58,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      # - name: Tag Docker
-      #   run: | 
-      #     docker tag $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }}
-      
+            
       - name: Push image to DockerHub
-        run: docker push --all-tags  $CURRENT_BUILD_IMAGE_NAME
-
-
-
-
+        run: docker push $CURRENT_BUILD_IMAGE_NAME
