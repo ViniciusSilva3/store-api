@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   payment-db:
     image: postgres
@@ -18,21 +18,21 @@ services:
     volumes: &payment_volumes
       - .:/app
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - payment-db
     networks:
       - store-api-network
+    image: '${CURRENT_BUILD_IMAGE_NAME}'
 
-############### Deploy ###############
-  deploy: 
+  ############### Deploy ###############
+  deploy:
     build: *payment_build
-    image: "${CURRENT_BUILD_IMAGE_NAME:-payment-service}"
+    image: '${CURRENT_BUILD_IMAGE_NAME:-payment-service}'
 
+  ############### CI ###################
 
-############### CI ###################
-
-  payment-ci: &ci 
+  payment-ci: &ci
     build: *payment_build
     command: yarn test
     env_file:
@@ -40,11 +40,11 @@ services:
     depends_on:
       - payment-db
 
-  spec: 
+  spec:
     <<: *ci
     volumes: *payment_volumes
 
-#### If we want to run locally we need to create a default network for all the services. 
+#### If we want to run locally we need to create a default network for all the services.
 networks:
   store-api-network:
     external: true
