@@ -1,0 +1,60 @@
+version: "3"
+services:
+  checkout-db:
+    image: postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - 5456:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: checkout_development
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - store-api-network
+
+  checkout-service:
+    build: &checkout_build
+      context: .
+    volumes: &checkout_volumes
+      - .:/app
+    environment:
+      DATABASE_URL: postgres://postgres@checkout-db:5432/checkout_development?encoding=UTF-8
+      TEST_DATABASE_URL: postgres://postgres@checkout-db:5432/checkout_test?encoding=UTF-8
+    ports:
+      - "3001:3001"
+    depends_on:
+      - checkout-db
+    networks:
+      - store-api-network
+
+############### Deploy ###############
+  deploy:
+    build: *checkout_build
+    image: "${CURRENT_BUILD_IMAGE_NAME:-checkout-service}"
+
+
+############### CI ###################
+
+  checkout-ci: &ci
+    build: *checkout_build
+    command: bundle exec rspec
+    env_file:
+      - .env.test
+    depends_on:
+      - checkout-db
+
+  spec:
+    <<: *ci
+    volumes: *checkout_volumes
+
+#### If we want to run locally we need to create a default network for all the services.
+networks:
+  store-api-network:
+    external: true
+  default:
+
+volumes:
+  postgresdata:
+    driver: local
