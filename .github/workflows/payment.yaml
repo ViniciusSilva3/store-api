@@ -22,7 +22,7 @@ defaults:
 
 env:
   BUILD_TARGETS: payment-service
-  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service:${{github.run_attempt}}
+  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service:${{ github.run_attempt }}
 
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Push image to DockerHub
-        run: docker push ${{ CURRENT_BUILD_IMAGE_NAME }}
+        run: docker push $CURRENT_BUILD_IMAGE_NAME
 
 
 
