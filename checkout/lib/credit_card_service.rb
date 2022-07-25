@@ -1,4 +1,4 @@
-class PaymentService
+class CreditCardService
 
   def initialize(user_id: nil, credit_card_id: nil)
     @user_id = user_id
