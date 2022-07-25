@@ -24,7 +24,7 @@ defaults:
 
 env:
   BUILD_TARGETS: payment-service
-  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service:${{ github.ref_name }}
+  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service
 
 
 jobs:
@@ -50,8 +50,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build
-        run: make build
+      - name: Build and Tag
+        run: |
+          make build
+          docker tag $CURRENT_BUILD_IMAGE_NAME $CURRENT_BUILD_IMAGE_NAME:${{ github.ref_name }} 
+          docker tag $CURRENT_BUILD_IMAGE_NAME $CURRENT_BUILD_IMAGE_NAME:${{ github.run_attempt }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -60,4 +63,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
             
       - name: Push image to DockerHub
-        run: docker push $CURRENT_BUILD_IMAGE_NAME
+      # Push all tags (-a)
+        run: docker push -a $CURRENT_BUILD_IMAGE_NAME
