@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CreditCard {
+  id          String @id @default(cuid())
+  number      String
+  expiry      String
+  user_id     String
+  document    String
+  name        String
+  Payments    Payment[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Payment {
+  id              String @id @default(cuid())
+  amount          Float
+  user_id         String
+  order_id        String
+  status          String
+  installments    Int  @default(1)
+  CreditCard      CreditCard? @relation(fields: [credit_card_id], references: [id])
+  credit_card_id  String
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+}
