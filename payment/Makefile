@@ -1,9 +1,11 @@
+
+
 network:
 	docker network create store-api-network || true
 
 build: 
 	@make network
-	docker-compose build
+	docker-compose build ${BUILD_TARGETS}
 
 dev:
 	@make network
