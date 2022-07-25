@@ -14,6 +14,7 @@ services:
       - cart-redis
     networks: &cart-networks
       - store-api-network
+    image: '${CURRENT_BUILD_IMAGE_NAME}'
 
   cart-redis:
     image: redis:latest
