@@ -28,7 +28,8 @@ services:
   ############### Deploy ###############
   deploy:
     build: *payment_build
-    image: '${CURRENT_BUILD_IMAGE_NAME:-payment-service}'
+    command: yarn build && yarn start:prod
+    image: '${CURRENT_BUILD_IMAGE_NAME}'
 
   ############### CI ###################
 

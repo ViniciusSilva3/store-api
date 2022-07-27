@@ -1,0 +1,80 @@
+{{- $appName := include "payment-service.fullname" . -}}
+{{- $releaseName := .Release.Name -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{$appName}}-{{$releaseName}}-postgres-service
+  labels:
+    app: {{$appName}}-{{$releaseName}}
+    service: {{$appName}}-{{$releaseName}}-postgres
+spec:
+  selector:
+    service: {{$appName}}-{{$releaseName}}-postgres
+  type: ClusterIP
+  ports:
+    - port: 5432
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{$appName}}-{{$releaseName}}-postgres-pv
+  labels:
+    name: {{$appName}}-{{$releaseName}}-postgres-pv
+spec:
+  capacity:
+    storage: 1Gi
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  gcePersistentDisk:
+    pdName: {{$appName}}-{{$releaseName}}-pg-data-disk
+    fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{$appName}}-{{$releaseName}}-postgres-pvc
+  labels:
+    type: local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: {{$appName}}-{{$releaseName}}-postgres-pv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{$appName}}-{{$releaseName}}-postgres
+  labels:
+    name: {{$appName}}-{{$releaseName}}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: {{$appName}}-{{$releaseName}}-postgres
+  template:
+    metadata:
+      labels:
+        service: {{$appName}}-{{$releaseName}}-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.4
+          volumeMounts:
+            - name: postgres-volume-mount
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: payment-db
+      restartPolicy: Always
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: {{$appName}}-{{$releaseName}}-postgres-pvc
