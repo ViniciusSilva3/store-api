@@ -1,0 +1,39 @@
+version: '3'
+services:
+  catalog-db:
+    image: postgres
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: catalog
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - store-api-network
+
+  catalog-service:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - '5000:5000'
+    depends_on:
+      - catalog-db
+    networks:
+      - store-api-network
+    image: '${CURRENT_BUILD_IMAGE_NAME}'
+
+  ############### Deploy ###############
+
+  ############### CI ###################
+
+#### If we want to run locally we need to create a default network for all the services.
+networks:
+  store-api-network:
+    external: true
+  default:
+
+volumes:
+  postgresdata:
+    driver: local
