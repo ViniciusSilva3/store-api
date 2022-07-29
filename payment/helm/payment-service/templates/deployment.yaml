@@ -36,10 +36,10 @@ spec:
           env:
             - name: DATABASE_URL
               value: postgresql://postgres:postgres@{{ .Release.Name }}-postgresql:5432/payment?schema=public
-          # ports:
-          #   - name: http
-          #     containerPort: 3000
-          #     protocol: TCP
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
           # livenessProbe:
           #   httpGet:
           #     path: /
