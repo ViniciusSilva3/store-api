@@ -23,7 +23,6 @@ services:
       - payment-db
     networks:
       - store-api-network
-    image: '${CURRENT_BUILD_IMAGE_NAME}'
 
   ############### Deploy ###############
   deploy:

@@ -22,15 +22,13 @@ defaults:
   run:
     working-directory: ./payment
 
-env:
-  BUILD_TARGETS: payment-service
-  CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service
-
-
 jobs:
   ci: 
     name: Payment CI 
     runs-on: ubuntu-latest
+    env:
+      BUILD_TARGETS: payment-service
+
 
     steps:
       - name: Checkout
@@ -46,6 +44,10 @@ jobs:
     needs: [ci]
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    env:
+      BUILD_TARGETS: deploy
+      CURRENT_BUILD_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/store-api-payment-service
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
