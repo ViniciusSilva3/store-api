@@ -26,8 +26,8 @@ class PaymentService
     end
   end
 
-  def create(amount, status, installments, credit_card_id)
-    api_connection().post do |request|
+  def create(amount, status="pending", installments="1", credit_card_id)
+    response = api_connection().post do |request|
       request.url "payment"
       request.body = {
         user_id: @user_id,
@@ -38,6 +38,9 @@ class PaymentService
         credit_card_id: credit_card_id
       }
     end
+    return JSON.parse(response.body) unless response.status != 200
+
+    raise StandardError.new "Error when trying to create payment"
   end
 
   def update(status)

@@ -9,10 +9,14 @@ class CatalogService
   end
 
   def get(product_id)
-    api_connection().get do |request|
+    response = api_connection().get do |request|
       request.url "catalog/product/#{product_id}"
     end
+    return JSON.parse(response.body) unless response.status != 200
+
+    raise StandardError.new "Error when trying to get product in catalog"
   end
+
 
   def get_multiple_products(product_ids)
     product_list = {}

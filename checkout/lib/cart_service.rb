@@ -13,8 +13,11 @@ class CartService
   end
 
   def get
-    api_connection().get do |request|
+    response = api_connection().get do |request|
       request.url "cart/#{@user_id}"
     end
+    return JSON.parse(response.body) unless response.status != 200
+
+    raise StandardError.new "Error when trying to get cart"
   end
 end

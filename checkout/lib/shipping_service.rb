@@ -13,9 +13,12 @@ class ShippingService
   end
 
   def create
-    api_connection().post do |request|
+    response = api_connection().post do |request|
       request.url "shipping/quote"
       request.body = @product_list
     end
+    return JSON.parse(response.body) unless response.status != 200
+
+    raise StandardError.new "Error when trying to create shipping"
   end
 end
